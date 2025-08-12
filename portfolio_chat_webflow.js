@@ -1,95 +1,52 @@
-/* chat_init.js
-   Loads configuration and initializes the widget once the library is present.
-   Safe for CSP (no inline code) and for multiple page loads (guards against double init).
+/* portfolio_chat_webflow.js – MINIMAL, KNOWN-GOOD
+   Defines a global window.PortfolioChatWidget with .init(cfg),
+   and draws a visible button so we can prove the library loads.
 */
 (function () {
-  // ----- CONFIG: edit these to your details -----
-  var CHAT_CONFIG = {
-    mount: "body",                 // Where to attach in DOM
-    brand: "#2563eb",              // Main color (button/header)
-    title: "What can I help you with?",
-    contactEmail: "you@domain.com",
-    suggestions: ["About me", "Projects", "Skills", "Resume", "Contact"],
-    faqs: [
-      {
-        question: "About me",
-        answer:
-          "Hi! I'm Lori Cai, a full-stack engineer who loves building polished UIs and robust backends.",
-      },
-      {
-        question: "Projects",
-        answer:
-          "Highlights: 1) Real-time dashboard (Next.js + websockets), 2) Visual diff tool (Rust + WASM), 3) ML-aided search (Python + Postgres).",
-      },
-      {
-        question: "Skills",
-        answer:
-          "TypeScript, React/Next.js, Node, Python, Postgres, Tailwind, Playwright, Docker, AWS.",
-      },
-      {
-        question: "Resume",
-        answer:
-          "Ask me here and I can share a link, or find it in the site navigation.",
-      },
-      {
-        question: "Contact",
-        answer:
-          "Best way to reach me is email. I usually reply within 24 hours.",
-      },
-    ],
-  };
-  // ---------------------------------------------
+  // guard: if already defined, don't redefine
+  if (window.PortfolioChatWidget) return;
 
-  // Guard so we don't initialize twice if scripts are included multiple times.
-  if (window.__PCW_INIT_ATTEMPTED__) {
-    // If you really need to re-init, delete the flag and call again.
-    return;
-  }
-  window.__PCW_INIT_ATTEMPTED__ = true;
-
-  var START = Date.now();
-  var MAX_WAIT_MS = 20000; // stop trying after 20s
-  var POLL_MS = 100;
-
-  function libraryReady() {
-    return (
-      typeof window !== "undefined" &&
-      window.PortfolioChatWidget &&
-      typeof window.PortfolioChatWidget.init === "function"
-    );
+  function createButton(cfg) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.setAttribute("aria-label", "Open chat");
+    btn.textContent = "Chat";
+    var color = (cfg && cfg.brand) || "#2563eb";
+    Object.assign(btn.style, {
+      position: "fixed",
+      bottom: "24px",
+      right: "24px",
+      width: "64px",
+      height: "64px",
+      borderRadius: "9999px",
+      background: color,
+      color: "#fff",
+      border: "0",
+      boxShadow: "0 10px 20px rgba(0,0,0,.15)",
+      cursor: "pointer",
+      zIndex: "999999"
+    });
+    btn.addEventListener("click", function () {
+      alert("✅ Minimal widget loaded. Next step: swap in the full UI.");
+    });
+    document.body.appendChild(btn);
   }
 
-  function init() {
-    try {
-      window.PortfolioChatWidget.init(CHAT_CONFIG);
-      // Optional: open on load
-      // if (window.PortfolioChatWidget && window.PortfolioChatWidget.open) {
-      //   window.PortfolioChatWidget.open();
-      // }
-      if (typeof console !== "undefined") {
-        console.log("[pcw] initialized");
+  // expose a tiny, stable API
+  window.PortfolioChatWidget = {
+    init: function (config) {
+      try {
+        createButton(config || {});
+        if (typeof console !== "undefined") {
+          console.log("[pcw] library init ok");
+        }
+      } catch (e) {
+        console.error("[pcw] library init error", e);
       }
-    } catch (err) {
-      console.error("[pcw] init error:", err);
     }
+  };
+
+  if (typeof console !== "undefined") {
+    console.log("[pcw] library loaded");
   }
-
-  (function waitForLibrary() {
-    if (libraryReady()) {
-      init();
-      return;
-    }
-    if (Date.now() - START > MAX_WAIT_MS) {
-      console.warn(
-        "[pcw] library not found after " + MAX_WAIT_MS + "ms. " +
-          "Verify the library <script src> is above this init file and loads with status 200."
-      );
-      return;
-    }
-    setTimeout(waitForLibrary, POLL_MS);
-  })();
 })();
-
-// expose the global
-window.PortfolioChatWidget = { init: (config) => new Widget(config) };
-
