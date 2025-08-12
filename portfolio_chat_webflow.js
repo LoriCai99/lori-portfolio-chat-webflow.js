@@ -1,4 +1,3 @@
-<!-- Paste this single block into a Webflow Embed element (once per page). -->
 <script>
 (function(){
   // ===== Utilities =====
@@ -142,20 +141,5 @@
   // Expose + init helper
   window.PortfolioChatWidget={ init:(config)=>new Widget(config) };
 
-  // ===== EDIT BELOW WITH YOUR CONTENT (optional quick start) =====
-  // If you want, set your config here and you won't need a second <script> tag.
-  window.PortfolioChatWidget.init({
-    brand:'#2563eb',
-    title:'What can I help you with?',
-    contactEmail:'you@domain.com',
-    suggestions:['About me','Projects','Skills','Resume','Contact'],
-    faqs:[
-      {question:'About me',answer:"I'm a full‑stack engineer focused on Next.js + Node."},
-      {question:'Projects',answer:'Realtime dashboard, visual diff tool, ML‑aided search.'},
-      {question:'Skills',answer:'TypeScript, React/Next.js, Node, Python, Postgres, AWS.'},
-      {question:'Resume',answer:'Ask me for a link or grab it from the top nav.'},
-      {question:'Contact',answer:'Email me at you@domain.com — I reply within 24h.'},
-    ]
-  });
 })();
 </script>
