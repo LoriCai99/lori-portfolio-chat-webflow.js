@@ -140,6 +140,5 @@
 
   // Expose + init helper
   window.PortfolioChatWidget={ init:(config)=>new Widget(config) };
-
 })();
 </script>
