@@ -1,10 +1,12 @@
-/* portfolio_chat_webflow.js – MINIMAL, KNOWN-GOOD
-   Defines a global window.PortfolioChatWidget with .init(cfg),
-   and draws a visible button so we can prove the library loads.
-*/
+/* portfolio_chat_webflow.js — KNOWN-GOOD v12 */
 (function () {
-  // guard: if already defined, don't redefine
-  if (window.PortfolioChatWidget) return;
+  console.log("[pcw] lib start v12");
+
+  // If already defined, do nothing (prevents double loads from erroring)
+  if (window.PortfolioChatWidget && typeof window.PortfolioChatWidget.init === "function") {
+    console.log("[pcw] lib already defined");
+    return;
+  }
 
   function createButton(cfg) {
     var btn = document.createElement("button");
@@ -32,21 +34,17 @@
     document.body.appendChild(btn);
   }
 
-  // expose a tiny, stable API
+  // *** DEFINE THE GLOBAL ***
   window.PortfolioChatWidget = {
     init: function (config) {
       try {
         createButton(config || {});
-        if (typeof console !== "undefined") {
-          console.log("[pcw] library init ok");
-        }
+        console.log("[pcw] lib init ok");
       } catch (e) {
-        console.error("[pcw] library init error", e);
+        console.error("[pcw] lib init error", e);
       }
     }
   };
 
-  if (typeof console !== "undefined") {
-    console.log("[pcw] library loaded");
-  }
+  console.log("[pcw] lib defined:", typeof window.PortfolioChatWidget.init);
 })();
