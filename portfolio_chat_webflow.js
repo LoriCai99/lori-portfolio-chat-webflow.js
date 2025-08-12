@@ -89,3 +89,7 @@
     setTimeout(waitForLibrary, POLL_MS);
   })();
 })();
+
+// expose the global
+window.PortfolioChatWidget = { init: (config) => new Widget(config) };
+
