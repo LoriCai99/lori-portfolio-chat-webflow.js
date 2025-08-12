@@ -1,36 +1,21 @@
-/* chat_init.js – MINIMAL, KNOWN-GOOD
-   No inline JS needed; this file waits for the library then calls init.
-*/
+/* chat_init.js — KNOWN-GOOD v12 */
 (function () {
-  var START = Date.now();
-  var MAX_WAIT_MS = 20000;  // 20s
-  var POLL_MS = 100;
+  console.log("[pcw] init file loaded v12");
+  var START = Date.now(), MAX_WAIT_MS = 20000, POLL_MS = 100;
 
   function ready() {
-    return (
-      typeof window !== "undefined" &&
-      window.PortfolioChatWidget &&
-      typeof window.PortfolioChatWidget.init === "function"
-    );
+    return window.PortfolioChatWidget && typeof window.PortfolioChatWidget.init === "function";
   }
-
-  function init() {
-    console.log("[pcw] init file running");
-    window.PortfolioChatWidget.init({
-      brand: "#2563eb",
-      title: "What can I help you with?",
-      contactEmail: "you@domain.com",
-      suggestions: ["About me", "Projects", "Skills", "Resume", "Contact"],
-      faqs: []
-    });
+  function go() {
+    console.log("[pcw] calling .init()");
+    window.PortfolioChatWidget.init({ brand: "#2563eb" });
   }
-
-  (function waitLoop() {
-    if (ready()) return init();
+  (function wait() {
+    if (ready()) return go();
     if (Date.now() - START > MAX_WAIT_MS) {
       console.warn("[pcw] library not found after 20s. Check script order/URLs.");
       return;
     }
-    setTimeout(waitLoop, POLL_MS);
+    setTimeout(wait, POLL_MS);
   })();
 })();
